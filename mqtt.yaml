@@ -1,0 +1,262 @@
+binary_sensor:
+  - name: ovms_leaf_chargeport_open
+    state_topic: ovms/[mqtt-client-name]/[vehiculeID]/metric/v/d/cp
+    device_class: door
+    payload_on: "yes"
+    payload_off: "no"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_charge_status
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/charging"
+    device_class: battery_charging
+    payload_on: "yes"
+    payload_off: "no"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+      
+switch:
+  - name: Leaf Chauffage
+    qos: 1
+    command_topic: "ovms/[mqtt-client-name]/[vehiculeID]/client/home-assistant/command/1"
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/client/home-assistant/response/1"
+    state_on: |
+      Climate Control 
+      on
+
+    state_off: |
+      Climate Control 
+      off
+    payload_on: "climatecontrol on"
+    payload_off: "climatecontrol off"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+button:
+  - name: Leaf OVMS reset
+    qos: 1
+    command_topic: "ovms/[mqtt-client-name]/[vehiculeID]/client/home-assistant/command/1"
+    payload_press: "module reset"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+sensors:
+  - name: ovms_leaf_event
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/event"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_state
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/state"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_duration
+    device_class: timestamp
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/time"
+    value_template: "{{ as_datetime((as_timestamp(now()) - (value | int)) |round()) }}"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_voltage
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/voltage"
+    unit_of_measurement: "V"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_amperage
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/current"
+    device_class: current
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_max_amperage
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/climit"
+    device_class: current
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_charge_type
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/type"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_charge_efficiency
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/efficiency"
+    unit_of_measurement: "%"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_charge_complete_duration
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/duration/full"
+    device_class: timestamp
+    value_template: "{{ as_datetime((as_timestamp(now()) + (value|int *60)) |round()) }}"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_charge_kwh
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/kwh"
+    unit_of_measurement: "kWh"
+    value_template: "{{ value | round(2) }}"
+    device_class: energy
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_soc
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/b/soc"
+    unit_of_measurement: "%"
+    device_class: battery
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_soh
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/xnl/v/b/soh/instrument"
+    unit_of_measurement: "%"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_range_full
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/b/range/full"
+    unit_of_measurement: "km"
+    value_template: "{{ value | round(0) }}"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+    
+  - name: ovms_leaf_range_est
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/b/range/est"
+    value_template: "{{ value | round(0) }}"
+    unit_of_measurement: "km"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_range_ideal
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/b/range/ideal"
+    value_template: "{{ value | round(0) }}"
+    unit_of_measurement: "km"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_range_instrument
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/xnl/v/b/soc/instrument"
+    value_template: "{{ value | round(0) }}"
+    unit_of_measurement: "km"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_battery_temp
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/b/temp"
+    value_template: "{{ value | round(0) }}"
+    unit_of_measurement: "°C"
+    device_class: temperature
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_cabin_temp
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/e/cabintemp"
+    value_template: "{{ value | round(0) }}"
+    unit_of_measurement: "°C"
+    device_class: temperature
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_speed
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/p/speed"
+    unit_of_measurement: "km/h"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_odometer
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/p/odometer"
+    unit_of_measurement: "km"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_parktime
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/e/parktime"
+    device_class: timestamp
+    value_template: >-
+      {% set value = value | int %}
+      {% if value == 0 %}
+        None
+      {% else %}
+        {{ as_datetime((as_timestamp(now()) - (value | int)) |round()) }}
+      {% endif %}
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+
+  - name: ovms_leaf_drivetime
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/e/drivetime"
+    device_class: timestamp
+    value_template: >-
+      {% set value = value | int %}
+      {% if value == 0 %}
+        None
+      {% else %}
+        {{ as_datetime((as_timestamp(now()) - (value | int)) |round()) }}
+      {% endif %}
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+  
+  - name: ovms_leaf_mdm_network
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/m/net/mdm/network"
+    availability: 
+      topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
+      payload_available: "yes"
+      payload_not_available: "no"
+    
+  - name: ovms_leaf_latitude
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/p/latitude"
+  - name: ovms_leaf_longitude
+    state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/p/longitude"
