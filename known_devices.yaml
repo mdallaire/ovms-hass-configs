@@ -1,0 +1,6 @@
+leaf:
+  name: leaf
+  mac:
+  icon: car-electric
+  picture:
+  track: true

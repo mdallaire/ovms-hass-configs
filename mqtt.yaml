@@ -20,7 +20,7 @@ binary_sensor:
       payload_not_available: "no"
       
 switch:
-  - name: Leaf Chauffage
+  - name: Leaf Heating
     qos: 1
     command_topic: "ovms/[mqtt-client-name]/[vehiculeID]/client/home-assistant/command/1"
     state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/client/home-assistant/response/1"
@@ -66,7 +66,15 @@ sensors:
   - name: ovms_leaf_charge_duration
     device_class: timestamp
     state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/time"
-    value_template: "{{ as_datetime((as_timestamp(now()) - (value | int)) |round()) }}"
+    value_template: >-
+      {% set value = value | int %}
+      {% if value == 0 %}
+        None
+      {% elif is_state('sensor.ovms_leaf_charge_status', 'Off') %}
+        None
+      {% else %}
+        {{ as_datetime((as_timestamp(now()) - (value | int)) |round()) }}
+      {% endif %}
     availability: 
       topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
       payload_available: "yes"
@@ -114,7 +122,15 @@ sensors:
   - name: ovms_leaf_charge_complete_duration
     state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/v/c/duration/full"
     device_class: timestamp
-    value_template: "{{ as_datetime((as_timestamp(now()) + (value|int *60)) |round()) }}"
+    value_template: >-
+      {% set value = value | int %}
+      {% if value == 0 %}
+        None
+      {% elif is_state('sensor.ovms_leaf_charge_status', 'Off') %}
+        None
+      {% else %}
+        {{ as_datetime((as_timestamp(now()) + (value|int *60)) |round()) }}
+      {% endif %}
     availability: 
       topic: "ovms/[mqtt-client-name]/[vehiculeID]/metric/s/v3/connected"
       payload_available: "yes"

@@ -1,0 +1,32 @@
+- id: '1'
+  alias: leaf location
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.ovms_leaf_longitude
+  - platform: state
+    entity_id: sensor.ovms_leaf_latitude
+  condition: []
+  action:
+  - service: device_tracker.see
+    data_template:
+      dev_id: leaf_2015
+      gps:
+      - '{{ states(''sensor.ovms_leaf_latitude'') }}'
+      - '{{ states(''sensor.ovms_leaf_longitude'') }}'
+  mode: restart
+
+- id: '2'
+  alias: Leaf - Status Heating
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: ovms/[mqtt-client-name]/[vehiculeID]/metric/v/e/heating
+    payload: 'no'
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.leaf_heating
+  mode: single
