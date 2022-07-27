@@ -1,6 +1,6 @@
 # Sample MQTT configuration for Home-Assistant and OVMS
 
-This repo contain some example MQTT configuration to add to your Home-Assistant that enable you to use your (https://www.openvehicles.com)[OVMS].
+This repo contain some example MQTT configuration to add to your Home-Assistant that enable you to use your [OVMS](https://www.openvehicles.com).
 
 ## Caveats
 
@@ -10,6 +10,7 @@ Some sensors tend to update more frequently than other and as such you can see s
 
 If you use a SIM card with data you have to find a balance between frequent updates and data usage costs.
 As a reference I use the following settings with my OVMS Server V3 configuration.
+
 **This is for reference only, it works for me and the resulting cost is OK for me with my provider (which is not hologram.io). YOU are responsible for your settings and the resulting data cost**
 
 ```
@@ -23,7 +24,7 @@ Update intervals
 ```
 
 
-All of the sensors also have an "availability" configuration that will check if the OVMS is connected to the V3 server. If it is not all the sensors will show as Unavailable until the connection is re-established. If you prefer to have stale values instead of unavailable you can comment out the availability section for each sensors.
+All of the sensors also have an "availability" configuration that will check if the OVMS is connected to the V3 server. If it is not, all the sensors will show as Unavailable until the connection is re-established. If you prefer to have stale values instead of unavailable you can comment out the availability section for each sensors.
 
 ## Pre-requisite
 
