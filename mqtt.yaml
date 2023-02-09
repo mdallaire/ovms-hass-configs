@@ -48,7 +48,7 @@ button:
       payload_available: "yes"
       payload_not_available: "no"
 
-sensors:
+sensor:
   - name: ovms_leaf_event
     state_topic: "ovms/[mqtt-client-name]/[vehiculeID]/event"
     availability: 
