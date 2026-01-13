@@ -1,3 +1,8 @@
+**I am archiving this project since a HACS component is available for OVMS and does all this work automatically:**
+
+**https://github.com/enoch85/ovms-home-assistant**
+
+
 # Sample MQTT configuration for Home-Assistant and OVMS
 
 This repo contain some example MQTT configuration to add to your Home-Assistant that enable you to use your [OVMS](https://www.openvehicles.com).
